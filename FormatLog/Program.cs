@@ -1,4 +1,4 @@
-using System.CommandLine;
+﻿using System.CommandLine;
 using Lithium.FormatLog;
 
 var inOption = new Option<TextReader?>(
@@ -33,7 +33,7 @@ var outOption = new Option<TextWriter?>(
 outOption.AddAlias("-o");
 outOption.SetDefaultValue(Console.Out);
 
-var rootCommand = new RootCommand("Sample app for System.CommandLine");
+var rootCommand = new RootCommand("Structured logs command line formatting tool");
 rootCommand.SetHandler(async (reader, writer) =>
 {
     var renderer = new LogRenderer();
