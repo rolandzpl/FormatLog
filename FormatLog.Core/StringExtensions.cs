@@ -1,6 +1,6 @@
-namespace Lithium.CLEF;
+namespace Lithium.FormatLog;
 
-static class StringExtensions
+public static class StringExtensions
 {
     public static int LineCount(this string s)
     {

@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Lithium.CLEF;
+namespace Lithium.FormatLog;
 
 public class LogRendererTests
 {

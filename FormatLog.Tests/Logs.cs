@@ -1,4 +1,4 @@
-namespace Lithium.CLEF;
+namespace Lithium.FormatLog;
 
 static class Logs
 {

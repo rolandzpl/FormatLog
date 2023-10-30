@@ -2,9 +2,9 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace Lithium.CLEF;
+namespace Lithium.FormatLog;
 
-class LogRenderer
+public class LogRenderer
 {
     public static readonly Regex Expression = new Regex(@"\{((?<PropertyName>\w+)(:{1}(?<Format>[^}]+))*)\}");
 
@@ -36,13 +36,4 @@ class LogRenderer
     }
 
     record Log(DateTime @t, string @mt);
-}
-
-static class LogRendererExtensions
-{
-    public static async Task<string> RenderLineAsync(this LogRenderer renderer, TextReader reader) =>
-        await renderer.RenderLineAsync(await reader.ReadLineAsync());
-
-    public static async Task<string> RenderLineAsync(this LogRenderer renderer, TextReader reader, CultureInfo cultureInfo) =>
-        await renderer.RenderLineAsync(await reader.ReadLineAsync(), cultureInfo);
 }
