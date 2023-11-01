@@ -33,8 +33,15 @@ var outOption = new Option<TextWriter?>(
 outOption.AddAlias("-o");
 outOption.SetDefaultValue(Console.Out);
 
+var formatOption=new Option<string >(
+    name:"--format",
+    description:"Line format"
+);
+formatOption.AddAlias("-f");
+formatOption.SetDefaultValue("${@t} ${ClientIp} ${SourceContext} ${FormattedMessage}");
+
 var rootCommand = new RootCommand("Structured logs command line formatting tool");
-rootCommand.SetHandler(async (reader, writer) =>
+rootCommand.SetHandler(async (reader, writer, format) =>
 {
     var renderer = new LogRenderer();
 
@@ -51,11 +58,12 @@ rootCommand.SetHandler(async (reader, writer) =>
         {
             continue;
         }
-        await writer!.WriteLineAsync(await renderer.RenderLineAsync(line));
+        await writer!.WriteLineAsync(await renderer.RenderLineAsync(line, format));
     }
-}, inOption, outOption);
+}, inOption, outOption, formatOption);
 
 rootCommand.AddOption(inOption);
 rootCommand.AddOption(outOption);
+rootCommand.AddOption(formatOption);
 
 return await rootCommand.InvokeAsync(args);

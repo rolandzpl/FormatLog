@@ -13,6 +13,30 @@ public class LogRendererTests
     }
 
     [Test]
+    public async Task RenderLineAsync_GivenLogReaderAndFormat_RendersLineAccordingToFormat_1()
+    {
+        using var reader = new StringReader(Logs.Example1);
+        var formattedLog = await renderer.RenderLineAsync(reader, "${@t} ${FormattedMessage}");
+        Assert.That(formattedLog, Is.EqualTo("2023-10-26T04:45:30.5362270Z HTTP GET /css/site.css responded 304 in 0,1725 ms"));
+    }
+
+    [Test]
+    public async Task RenderLineAsync_GivenLogReaderAndFormat_RendersLineAccordingToFormat_2()
+    {
+        using var reader = new StringReader(Logs.Example1);
+        var formattedLog = await renderer.RenderLineAsync(reader, "${@t} ${ClientIp} ${SourceContext} ${FormattedMessage}");
+        Assert.That(formattedLog, Is.EqualTo("2023-10-26T04:45:30.5362270Z 90.156.5.165 Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /css/site.css responded 304 in 0,1725 ms"));
+    }
+
+    [Test]
+    public async Task RenderLineAsync_GivenLogReaderAndFormat_RendersLineAccordingToFormat_3()
+    {
+        using var reader = new StringReader(Logs.Example1);
+        var formattedLog = await renderer.RenderLineAsync(reader, "${@t} ${NonExistingProperty} ${FormattedMessage}");
+        Assert.That(formattedLog, Is.EqualTo("2023-10-26T04:45:30.5362270Z  HTTP GET /css/site.css responded 304 in 0,1725 ms"));
+    }
+
+    [Test]
     public async Task Loop_GivenLogReader_RendersToWriter()
     {
         using var reader = new StringReader(Logs.Example1);
@@ -37,7 +61,7 @@ public class LogRendererTests
     [Test]
     public void Expression_GivenLogExampleWithFourPlaceholders_ReturnsFourCaptures()
     {
-        var matches = LogRenderer.Expression.Matches(Logs.Example1);
+        var matches = LogRenderer.FormattingExpression.Matches(Logs.Example1);
         Assert.That(matches.Count(), Is.EqualTo(4));
     }
 
@@ -45,7 +69,7 @@ public class LogRendererTests
     public async Task RenderLineAsync_ProvidedStructuredLog_ReturnsLogTextRepresentation()
     {
         Assert.That(
-            await renderer.RenderLineAsync(Logs.Example1, CultureInfo.InvariantCulture),
+            await renderer.RenderLineAsync(Logs.Example1, null, CultureInfo.InvariantCulture),
             Is.EqualTo(@"HTTP GET /css/site.css responded 304 in 0.1725 ms"));
     }
 
